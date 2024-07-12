@@ -1,0 +1,9 @@
+{
+	"name": "adffarid",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "657bb3de-6701-4313-8ed6-21dc60f4ad26",
+		"tenantId": "e522de87-3b5f-4914-b700-3ee0ac8e7497"
+	}
+}
