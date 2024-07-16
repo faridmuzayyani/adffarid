@@ -11,6 +11,9 @@
 			},
 			"file_name": {
 				"type": "string"
+			},
+			"bucket_name": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -18,7 +21,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "GoogleCloudStorageLocation",
-				"bucketName": "azure_data_engineer",
+				"bucketName": {
+					"value": "@dataset().bucket_name",
+					"type": "Expression"
+				},
 				"folderPath": {
 					"value": "@dataset().folder_name",
 					"type": "Expression"
