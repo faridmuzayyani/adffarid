@@ -5,8 +5,6 @@
 			{
 				"name": "customers",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "adls_customers",
@@ -25,16 +23,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "MySqlSource",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
@@ -59,10 +56,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "mysql_google",
+						"referenceName": "CSV_ADLS_farid",
 						"type": "DatasetReference",
 						"parameters": {
-							"table_name": "customers"
+							"container_name": "development",
+							"folder_name": "@concat('data/customer/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "customers.csv",
+							"delimiter_name": ";",
+							"row_as_header": true
 						}
 					}
 				],
@@ -80,8 +81,6 @@
 			{
 				"name": "orders",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "adls_orders",
@@ -100,16 +99,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "MySqlSource",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
@@ -134,10 +132,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "mysql_google",
+						"referenceName": "CSV_ADLS_farid",
 						"type": "DatasetReference",
 						"parameters": {
-							"table_name": "orders"
+							"container_name": "development",
+							"folder_name": "@concat('data/order/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "orders.csv",
+							"delimiter_name": ";",
+							"row_as_header": true
 						}
 					}
 				],
@@ -155,11 +157,9 @@
 			{
 				"name": "order_items",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "adls_items",
+						"activity": "adls_order_items",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -175,16 +175,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "MySqlSource",
-						"additionalColumns": [
-							{
-								"name": "ingest_time",
-								"value": {
-									"value": "@utcNow()",
-									"type": "Expression"
-								}
-							}
-						]
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
@@ -210,10 +209,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "mysql_google",
+						"referenceName": "CSV_ADLS_farid",
 						"type": "DatasetReference",
 						"parameters": {
-							"table_name": "order_items"
+							"container_name": "development",
+							"folder_name": "@concat('data/order_item/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "order_items.csv",
+							"delimiter_name": ";",
+							"row_as_header": true
 						}
 					}
 				],
@@ -231,8 +234,6 @@
 			{
 				"name": "fact_customer_rfm",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "customers",
@@ -324,8 +325,61 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "mysql_google",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "customers"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_ADLS_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "@concat('data/customer/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "customers.csv",
+							"delimiter_name": ":",
+							"row_as_header": true
+						}
+					}
+				]
 			},
 			{
 				"name": "adls_orders",
@@ -340,11 +394,64 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "mysql_google",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "orders"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_ADLS_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "@concat('data/order/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "orders.csv",
+							"delimiter_name": ";",
+							"row_as_header": true
+						}
+					}
+				]
 			},
 			{
-				"name": "adls_items",
+				"name": "adls_order_items",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -356,8 +463,61 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "MySqlSource",
+						"additionalColumns": [
+							{
+								"name": "ingest_time",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						]
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "mysql_google",
+						"type": "DatasetReference",
+						"parameters": {
+							"table_name": "order_items"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "CSV_ADLS_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "@concat('data/order_item/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
+							"file_name": "order_items.csv",
+							"delimiter_name": ";",
+							"row_as_header": true
+						}
+					}
+				]
 			}
 		],
 		"folder": {
