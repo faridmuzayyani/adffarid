@@ -119,7 +119,8 @@
 										"file_name": {
 											"value": "@concat(item(),'.png')",
 											"type": "Expression"
-										}
+										},
+										"bucket_name": "azure_data_engineer"
 									}
 								}
 							],
@@ -131,7 +132,7 @@
 										"container_name": "development",
 										"folder_name": "data",
 										"file_name": {
-											"value": "@item()",
+											"value": "@concat(item(),'.png')",
 											"type": "Expression"
 										}
 									}
