@@ -141,6 +141,8 @@
 			{
 				"name": "order_items",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -237,8 +239,54 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT\n    a.customer_id,\n    CONVERT(char(7), b.order_purchase_timestamp, 126) AS [month_id],\n    DATEDIFF(day, MAX(b.order_purchase_timestamp), '2018-08-31') AS recency,\n    COUNT(b.order_id) AS frequency,\n    SUM(c.price) AS monetary\nFROM dbo.customers a\nLEFT JOIN dbo.orders b ON a.customer_id = b.customer_id\nLEFT JOIN dbo.order_items c ON b.order_id = c.order_id\nGROUP BY a.customer_id, CONVERT(char(7), b.order_purchase_timestamp, 126);",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"customer_id",
+								"month_id"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SQL_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": ".",
+							"table_name": "."
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": "dbo",
+							"table_name": "fact_customer_rfm"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
