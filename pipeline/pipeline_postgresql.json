@@ -530,7 +530,11 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"SK_ID_PREV",
+								"SK_ID_CURR"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
