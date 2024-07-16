@@ -50,7 +50,7 @@
 					"variableName": "pipelineReturnValue",
 					"value": [
 						{
-							"key": "image_name",
+							"key": "list_image",
 							"value": {
 								"type": "Expression",
 								"content": "@activity('list_image').output.firstRow"
