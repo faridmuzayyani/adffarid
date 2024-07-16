@@ -1,0 +1,63 @@
+{
+	"name": "pipeline_gcs",
+	"properties": {
+		"activities": [
+			{
+				"name": "GCS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "GoogleCloudStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "BINARY_GCS_hanif",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": "image",
+							"file_name": "list_image"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "BINARY_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"container_name": "development",
+							"folder_name": "data"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "practice_case/day 5"
+		},
+		"annotations": []
+	}
+}
