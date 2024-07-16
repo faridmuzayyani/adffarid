@@ -123,7 +123,7 @@
 								"value": "@concat('data/previous_application/',formatDateTime(utcNow(), 'yyyy_MM_dd'))",
 								"type": "Expression"
 							},
-							"file_name": "previous_application",
+							"file_name": "previous_application.csv",
 							"delimiter_name": ";",
 							"row_as_header": true
 						}
@@ -133,8 +133,6 @@
 			{
 				"name": "adls_bureau",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -199,8 +197,6 @@
 			{
 				"name": "adls_intsallment",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -423,8 +419,6 @@
 			{
 				"name": "bureau",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "adls_bureau",
@@ -504,8 +498,6 @@
 			{
 				"name": "installment",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "adls_intsallment",
@@ -579,6 +571,62 @@
 						"parameters": {
 							"schema_name": "dbo",
 							"table_name": "installment"
+						}
+					}
+				]
+			},
+			{
+				"name": "fact_loan_modeling",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "previous_application",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "bureau",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "installment",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SQL_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema_name": ".",
+							"table_name": "."
 						}
 					}
 				]
