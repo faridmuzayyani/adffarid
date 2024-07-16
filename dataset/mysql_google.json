@@ -2,7 +2,7 @@
 	"name": "mysql_google",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "MySQL_farid",
+			"referenceName": "mysql_google",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
