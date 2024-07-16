@@ -51,7 +51,7 @@
 					"variableName": "pipelineReturnValue",
 					"value": [
 						{
-							"key": "list_image",
+							"key": "image_name",
 							"value": {
 								"type": "Expression",
 								"content": "@split(replace(activity('list_image').output.firstRow.concatenated_files, '\\', ''), ',')"
@@ -117,7 +117,7 @@
 									"parameters": {
 										"folder_name": "image",
 										"file_name": {
-											"value": "@item()",
+											"value": "@concat(item(),'.png')",
 											"type": "Expression"
 										}
 									}
@@ -166,7 +166,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, image_url) VALUES (''', item(), ''', ''https://hanifstorageaccount.blob.core.windows.net/hanifcontainers/image/', item(), '.png', ''');')",
+											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, url_name) VALUES (''', item(), ''', ''https://hanifstorageaccount.blob.core.windows.net/hanifcontainers/image/', item(), '.png', ''');')",
 											"type": "Expression"
 										}
 									}
@@ -202,7 +202,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, image_url) VALUES (''', item(), '.png', ''', ''failed', ''');')",
+											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, url_name) VALUES (''', item(), '.png', ''', ''failed', ''');')",
 											"type": "Expression"
 										}
 									}
