@@ -64,8 +64,6 @@
 			{
 				"name": "ForEach1",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Set variable1",
@@ -168,7 +166,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_time) VALUES (''', item(), ''', ''https://hanifstorageaccount.blob.core.windows.net/hanifcontainers/image/google.png', item(), ''', GETDATE());')",
+											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, image_url) VALUES (''', item(), ''', ''https://hanifstorageaccount.blob.core.windows.net/hanifcontainers/image/', item(), '.png', ''');')",
 											"type": "Expression"
 										}
 									}
@@ -204,7 +202,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('INSERT INTO dbo.image_log (image_name, image_url, ingest_tme) VALUES (''', item(), ''', ''failed', ''', GETDATE());')",
+											"value": "@concat('INSERT INTO dbo.list_image_log (image_name, image_url) VALUES (''', item(), '.png', ''', ''failed', ''');')",
 											"type": "Expression"
 										}
 									}
