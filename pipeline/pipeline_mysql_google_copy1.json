@@ -375,7 +375,7 @@
 							"container_name": "development",
 							"folder_name": "@concat('data/customer/',formatDateTime(utcnow(), 'yyyy_MM_dd'))",
 							"file_name": "customers.csv",
-							"delimiter_name": ":",
+							"delimiter_name": ";",
 							"row_as_header": true
 						}
 					}
