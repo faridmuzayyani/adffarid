@@ -5,8 +5,6 @@
 			{
 				"name": "SCD 1",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Extract Data",
@@ -136,8 +134,6 @@
 			{
 				"name": "SCD 2",
 				"type": "SqlServerStoredProcedure",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "SCD 1",
