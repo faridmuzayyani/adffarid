@@ -9,7 +9,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "Extract Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -163,7 +163,7 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "Extract Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
