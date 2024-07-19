@@ -112,7 +112,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_employee_hanif",
+						"referenceName": "SQL_farid",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
