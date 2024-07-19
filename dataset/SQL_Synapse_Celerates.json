@@ -2,7 +2,7 @@
 	"name": "SQL_Synapse_Celerates",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SQL_Synapse_Farid",
+			"referenceName": "SQL_synapse_celerates",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
