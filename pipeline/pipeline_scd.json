@@ -45,8 +45,8 @@
 							{
 								"source": {
 									"name": "EmployeeID",
-									"type": "String",
-									"physicalType": "nvarchar"
+									"type": "Int32",
+									"physicalType": "int"
 								},
 								"sink": {
 									"name": "EmployeeID",
@@ -81,8 +81,8 @@
 							{
 								"source": {
 									"name": "StartDate",
-									"type": "String",
-									"physicalType": "nvarchar"
+									"type": "DateTime",
+									"physicalType": "date"
 								},
 								"sink": {
 									"name": "StartDate",
@@ -93,8 +93,8 @@
 							{
 								"source": {
 									"name": "EndDate",
-									"type": "String",
-									"physicalType": "nvarchar"
+									"type": "DateTime",
+									"physicalType": "date"
 								},
 								"sink": {
 									"name": "EndDate",
@@ -112,7 +112,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_employee_hanif",
+						"referenceName": "SQL_farid",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema_name": "dbo",
@@ -291,6 +291,33 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "SCD 3",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "SCD 2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[UpdateUserHistorical]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SQL_farid",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
