@@ -1,9 +1,9 @@
 {
-	"name": "pipeline_databricks_dan_adf",
+	"name": "pipeline_nosql_to_sql",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "MongoDB to JSON",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -52,11 +52,11 @@
 				]
 			},
 			{
-				"name": "Notebook1",
+				"name": "JSON to Parquet",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "MongoDB to JSON",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -77,6 +77,50 @@
 					"referenceName": "DB_Kelompok5",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Parquet to SQL Server Synapse",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "JSON to Parquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "PARQUET_ADLS_farid",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder_name": "data/documents.parquet/",
+							"file_name": "part-00000-tid-8213819312249318943-30968737-10fa-4d78-9457-75db3706bfa1-38-1-c000.snappy.parquet"
+						}
+					}
+				]
 			}
 		],
 		"folder": {
